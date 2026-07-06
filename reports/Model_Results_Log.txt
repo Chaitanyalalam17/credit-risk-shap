@@ -1,0 +1,158 @@
+MODEL RESULTS LOG — Credit Risk Classification
+Dataset: UCI German Credit (Hofmann, 1994)
+Split: 80/20 stratified, SMOTE on training set only
+Cross-validation: 5-fold stratified
+Date: 28 June 2026
+
+═══════════════════════════════════════════════════
+MODEL 1: LOGISTIC REGRESSION (Baseline)
+  Accuracy:  0.7400
+  F1-Score:  0.6061
+  Precision: 0.5556
+  Recall:    0.6667
+  AUC-ROC:   0.7846
+  MCC:       0.4183
+  CV F1:     0.7958 ± 0.0223
+  CV AUC:    0.8659 ± 0.0214
+
+  Confusion Matrix:
+    TN (Good→Good): 108
+    FP (Good→Bad):   32
+    FN (Bad→Good):   20  ← costly (5x penalty)
+    TP (Bad→Bad):    40
+
+  Notes: Best test F1 of all original models.
+         Overfitting gap: 0.1999 (moderate)
+
+═══════════════════════════════════════════════════
+MODEL 2: XGBOOST (original — GridSearchCV)
+  Best params: learning_rate=0.1, max_depth=5,
+               min_child_weight=1, n_estimators=300,
+               subsample=0.8
+  Best CV F1:  0.8376
+
+  Test results:
+  Accuracy:  0.7500
+  F1-Score:  0.5690
+  Precision: 0.5893
+  Recall:    0.5500
+  AUC-ROC:   0.7990  ← best AUC of all models
+  MCC:       0.3937
+  CV F1:     0.8303 ± 0.0386
+  CV AUC:    0.9090 ± 0.0197
+
+  Confusion Matrix:
+    TN: 117  FP: 23
+    FN:  27  TP: 33
+
+  Overfitting: Train F1=1.000 Test F1=0.569 Gap=0.431 
+
+═══════════════════════════════════════════════════
+MODEL 2B: XGBOOST (regularised — FINAL BEST MODEL)
+  Params: n_estimators=100, max_depth=3,
+          learning_rate=0.05, min_child_weight=5,
+          subsample=0.8, colsample_bytree=0.8,
+          reg_alpha=0.1, reg_lambda=1.0
+
+  Test results:
+  Accuracy:  [paste from your output]
+  F1-Score:  0.6179  ← best F1 overall
+  AUC-ROC:   0.7895
+  MCC:       0.4486  ← best MCC overall
+
+  Overfitting: Train F1=0.8623 Test F1=0.6179 Gap=0.2444
+  Gap reduced from 0.431 → 0.244 ✓
+
+  SELECTED FOR SHAP — reasons:
+    → Highest test F1-Score (0.6179)
+    → Highest MCC (0.4486)
+    → Best overfitting control
+    → Native TreeSHAP support
+    → Saved as: models/best_model.pkl
+
+═══════════════════════════════════════════════════
+MODEL 3: LIGHTGBM (original — GridSearchCV)
+  Best params: learning_rate=0.2, max_depth=7,
+               min_child_samples=30, n_estimators=100,
+               num_leaves=31, subsample=[value]
+  Best CV F1:  0.8364
+
+  Test results:
+  Accuracy:  0.7450
+  F1-Score:  0.5487
+  Precision: 0.5849
+  Recall:    0.5167
+  AUC-ROC:   0.7810
+  MCC:       0.3733
+  CV F1:     0.8364 ± 0.0287
+  CV AUC:    0.9059 ± 0.0179
+
+  Confusion Matrix:
+    TN: 118  FP: 22
+    FN:  29  TP: 31
+
+  Overfitting: Train F1=1.000 Test F1=0.549 Gap=0.451 ⚠
+
+═══════════════════════════════════════════════════
+MODEL 3B: LIGHTGBM (regularised)
+  Params: n_estimators=100, max_depth=3,
+          learning_rate=0.05, num_leaves=15,
+          min_child_samples=50, reg_alpha=0.1,
+          reg_lambda=1.0
+
+  F1-Score:  0.5938
+  AUC-ROC:   0.7804
+  MCC:       0.4054
+  Overfitting: Train=0.8522 Test=0.5938 Gap=0.2585
+  Gap reduced from 0.451 → 0.259 
+
+═══════════════════════════════════════════════════
+MODEL 4: RANDOM FOREST (GridSearchCV)
+  Best params: max_depth=None, max_features=sqrt,
+               min_samples_leaf=1, min_samples_split=2,
+               n_estimators=[value]
+  Best CV F1:  0.8398
+
+  Test results:
+  Accuracy:  0.7500
+  F1-Score:  0.5614
+  Precision: 0.5926
+  Recall:    0.5333
+  AUC-ROC:   0.7978
+  MCC:       0.3883
+  CV F1:     0.8398 ± 0.0196
+  CV AUC:    0.9179 ± 0.0165
+
+  Confusion Matrix:
+    TN: 118  FP: 22
+    FN:  28  TP: 32
+
+  Overfitting: Train F1=1.000 Test F1=0.561 Gap=0.439
+
+═══════════════════════════════════════════════════
+CROSS-VALIDATION SUMMARY (5-fold stratified):
+  LR:   Mean F1=0.7958 ±0.0223  Mean AUC=0.8659 ±0.0214
+  XGB:  Mean F1=0.8303 ±0.0386  Mean AUC=0.9090 ±0.0197
+  LGB:  Mean F1=0.8364 ±0.0287  Mean AUC=0.9059 ±0.0179
+  RF:   Mean F1=0.8398 ±0.0196  Mean AUC=0.9179 ±0.0165
+
+  Note: CV results on SMOTE training data show higher
+  scores than held-out test set — expected with SMOTE.
+  Random Forest has lowest CV variance (most stable).
+
+═══════════════════════════════════════════════════
+OVERFITTING FINDINGS AND MITIGATION:
+  All ensemble models showed Train F1=1.000 vs Test F1~0.55
+  Root cause: SMOTE synthetic samples too easy to memorise
+              on small dataset (n=1,000 training)
+  Mitigation: Stronger regularisation applied to XGBoost
+              and LightGBM (reg_alpha, reg_lambda, max_depth=3)
+  Result: Gap reduced from ~0.43 to ~0.25
+  Academic note: This is discussed in Results chapter
+                 as a limitation of SMOTE on small datasets
+
+═══════════════════════════════════════════════════
+FINAL MODEL SELECTED FOR SHAP: XGBoost (regularised)
+  F1=0.6179  AUC=0.7895  MCC=0.4486
+  Saved: models/best_model.pkl
+  Week 6: SHAP TreeExplainer will be applied
