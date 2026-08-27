@@ -1,0 +1,46 @@
+UAT OPEN COMMENTS
+============================================================
+
+MOST USEFUL:
+
+P1: I found it useful to see which factors had the biggest impact on the final decision. It helped me understand why the system gave a particular result.
+
+P2: Overall SHAP was useful because it turned a black box prediction into an explanation that can be easily understood and questioned. 
+
+P3: The waterfall plot (Chart 1) and beeswarm plot (Chart 2) are highly useful for audit and compliance purposes. They clearly break down exactly which risk variables drove a specific decision, making it much easier to detect system bias or errors.
+
+P4: It clearly showed which factors influenced the credit decision and whether they increased or decreased the risk.
+
+P5: It made the models decision easier to understand by showing which factors increased or decreased the risk.
+
+P6: They made the AI output more understandable by showing how individual factors affected the final result.
+
+P7: They helped identify the key factors responsible for the models credit-risk prediction.
+
+P8: The most useful part was that it showed exactly which factors pushed a decision toward "good" or "bad" credit risk, and by how much. Instead of just getting a yes/no answer, I could see the actual reasons behind each decision  like loan amount, checking account status, or employment years  and whether they helped or hurt the applicant. The color coding (red for bad risk, blue for good risk) made it easy to understand at a glance, and comparing the waterfall and force plots helped me see the same information in different ways.
+
+
+IMPROVEMENT SUGGESTIONS:
+
+P1: I think the charts could be a bit simpler and easier to read. Adding a short explanation of the main factors would make them more useful for people working in banking.
+
+P2: Improvements i would suggest is lead with the bank implication, using banking-specific examples, separate the concepts that are often conflated, Quantify wherever possible, make regulatory and governance implications explict,show the trades off and add a so what section, be explict about the assumptions and uncertainty
+
+P3: The force plots (Chart 3) are too cluttered with overlapping text, making them difficult to interpret quickly during a busy workday. To make these more useful, simplify the charts, avoid overlapping data labels, and convert the metrics into plain-language summaries that can be shared directly with customers.
+
+P4: Adding short descriptions for each factor would make the explanations even easier to understand. 
+
+P5: Including clear recommendations or next steps based on the SHAP results would make them more useful for banking professionals.
+
+P6: Adding practical guidance alongside the results could help professionals use the explanations when making credit decisions.
+
+P7: Providing brief explanations of technical features could make the results easier for banking staff to interpret.
+
+P8: A few suggestions:
+
+Use plain-language labels instead of technical feature names (e.g., "checking_account = 3" could say "Checking account: Good standing" so non-technical staff understand it faster).
+Add a short summary sentence at the top of each chart stating the final decision and the top 23 reasons, so people don't have to read the whole chart to get the gist.
+Show a comparison to a "typical" or average applicant, so professionals can see if this case is unusual.
+Include a confidence level alongside the decision, since SHAP shows influence but not certainty.
+Provide training or a simple legend on how to read force/waterfall plots, since not everyone is familiar with SHAP visualizations.
+
