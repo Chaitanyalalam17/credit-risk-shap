@@ -1,0 +1,10 @@
+Question,Strongly Disagree (1),Disagree (2),Neutral (3),Agree (4),Strongly Agree (5)
+clarity_chart1,0,0,0,1,7
+clarity_chart2,0,0,0,6,2
+clarity_chart3,0,0,0,3,5
+trust_workplace,0,0,0,2,6
+trust_confidence,0,0,0,3,5
+trust_customer,0,1,0,3,4
+useful_explain,0,1,0,5,2
+useful_errors,0,0,0,3,5
+useful_recommend,0,0,0,3,5
